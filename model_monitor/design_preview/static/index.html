@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>模型核对 · 设计预览</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>模型核对</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
 <body data-wallpaper="default"><a class="skip" href="#workspace">跳到对话列表</a><img id="imported-background" alt="" hidden>
 <div class="layout">
 <aside class="sidebar" aria-label="主导航">
@@ -8,10 +8,10 @@
  <p class="side-label">资料库</p>
  <nav class="navigation"><button data-view="all" aria-current="page"><img src="/icons/layers.svg" alt="">全部对话</button><button data-view="pending"><img src="/icons/circle-dashed.svg" alt="">待验证</button><button data-view="mismatch"><img src="/icons/triangle-alert.svg" alt="">不一致</button><button data-view="archived"><img src="/icons/archive.svg" alt="">含归档对话</button></nav>
  <p class="side-label">检查</p><button id="diagnostic-open" class="side-action"><img src="/icons/sliders-horizontal.svg" alt="">读取诊断</button>
- <div class="side-bottom"><div class="local-note"><img src="/icons/shield-check.svg" alt=""><div>仅在这台 Mac 上<span>只读访问本地记录</span></div></div><button id="wallpaper-open" class="side-action"><img src="/icons/image.svg" alt="">外观与壁纸</button><button id="demo" class="demo-button">演示三态（合成）</button><p>设计预览 <span>Beta 01</span></p></div>
+ <div class="side-bottom"><div class="local-note"><img src="/icons/shield-check.svg" alt=""><div>仅在这台 Mac 上<span>只读访问本地记录</span></div></div><button id="wallpaper-open" class="side-action"><img src="/icons/image.svg" alt="">外观与壁纸</button><button id="demo" class="demo-button">演示三态（合成）</button><p>模型核对 <span>本机运行</span></p></div>
 </aside>
 <main>
- <header class="titlebar"><div class="title-group"><p class="eyebrow">本机观测 <span>/</span> 资料库</p><h1 id="view-title">全部对话</h1></div><div class="header-actions"><span class="preview-label">设计预览</span><button id="diagnostic-toggle" class="diagnostic-toggle" hidden>异常</button><button id="refresh" class="icon-button" title="立即刷新" aria-label="立即刷新"><img src="/icons/refresh-cw.svg" alt=""></button></div></header>
+ <header class="titlebar"><div class="title-group"><p class="eyebrow">本机观测 <span>/</span> 资料库</p><h1 id="view-title">全部对话</h1></div><div class="header-actions"><span class="preview-label">只读观测</span><button id="diagnostic-toggle" class="diagnostic-toggle" hidden>异常</button><button id="refresh" class="icon-button" title="立即刷新" aria-label="立即刷新"><img src="/icons/refresh-cw.svg" alt=""></button></div></header>
  <div class="content">
  <div class="intro"><p>选择、请求与回报，一目了然。</p><span class="connection-label">每 5 秒自动刷新</span></div>
  <div id="monitor-page"><div id="demo-banner" class="warning demo-banner" hidden>合成演示数据 · 仅演示三态，不是实机上游证据。</div>
@@ -39,5 +39,5 @@
 </section>
  </div>
 </main></div>
-<dialog id="wallpaper-dialog" aria-labelledby="wallpaper-title"><div class="detail-head"><div><p class="eyebrow">个性化</p><h2 id="wallpaper-title">外观与壁纸</h2></div><button id="wallpaper-close" class="icon-button" aria-label="关闭壁纸设置"><img src="/icons/x.svg" alt=""></button></div><p class="dialog-description">给观测留一点自己的风格。仅作用于本设计预览。</p><section class="import-box"><label for="wallpaper-file">从这台 Mac 导入图片</label><p>PNG、JPEG 或 WebP，小于 8 MiB。</p><input id="wallpaper-file" type="file" accept="image/png,image/jpeg,image/webp"><img id="import-preview" alt="导入壁纸预览" hidden><button id="import-apply" class="primary" disabled>应用导入图片</button></section><h3>内置壁纸</h3><div class="wallpapers"><article><img src="/aurora.svg" alt="极光山谷壁纸预览"><div><h3>极光山谷</h3><button data-apply="aurora">应用极光</button></div></article><article><img src="/dunes.svg" alt="落日沙丘壁纸预览"><div><h3>落日沙丘</h3><button data-apply="dunes">应用沙丘</button></div></article></div><div class="dialog-bottom"><button data-apply="default">恢复默认</button><p id="wallpaper-status" role="status">设置在本机保存，刷新后保留。</p></div></dialog>
+<dialog id="wallpaper-dialog" aria-labelledby="wallpaper-title"><div class="detail-head"><div><p class="eyebrow">个性化</p><h2 id="wallpaper-title">外观与壁纸</h2></div><button id="wallpaper-close" class="icon-button" aria-label="关闭壁纸设置"><img src="/icons/x.svg" alt=""></button></div><p class="dialog-description">给观测留一点自己的风格。仅作用于本应用。</p><section class="import-box"><label for="wallpaper-file">从这台 Mac 导入图片</label><p>PNG、JPEG 或 WebP，小于 8 MiB。</p><input id="wallpaper-file" type="file" accept="image/png,image/jpeg,image/webp"><img id="import-preview" alt="导入壁纸预览" hidden><button id="import-apply" class="primary" disabled>应用导入图片</button></section><h3>内置壁纸</h3><div class="wallpapers"><article><img src="/aurora.svg" alt="极光山谷壁纸预览"><div><h3>极光山谷</h3><button data-apply="aurora">应用极光</button></div></article><article><img src="/dunes.svg" alt="落日沙丘壁纸预览"><div><h3>落日沙丘</h3><button data-apply="dunes">应用沙丘</button></div></article></div><div class="dialog-bottom"><button data-apply="default">恢复默认</button><p id="wallpaper-status" role="status">设置在本机保存，刷新后保留。</p></div></dialog>
 </body></html>

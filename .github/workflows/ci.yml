@@ -1,0 +1,46 @@
+name: macOS CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Run synthetic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest discover -v 2>&1 | tee "$RUNNER_TEMP/unittest.log"
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          log = (Path(os.environ['RUNNER_TEMP']) / 'unittest.log').read_text(encoding='utf-8')
+          summary = re.search(r'^Ran (\d+) tests? in ', log, re.MULTILINE)
+          if summary is None or int(summary.group(1)) < 172:
+              raise SystemExit('Expected discovery of at least 172 tests.')
+          if not log.rstrip().endswith('\nOK'):
+              raise SystemExit('Tests must pass with zero skips or expected failures.')
+          PY
+      - name: Type-check native shell
+        run: >-
+          xcrun swiftc -typecheck -swift-version 5
+          -module-cache-path "$RUNNER_TEMP/swift-module-cache"
+          -framework AppKit -framework WebKit -framework UniformTypeIdentifiers
+          model_monitor/native/main.swift
