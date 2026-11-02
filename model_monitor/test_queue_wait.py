@@ -25,24 +25,26 @@ class QueueWait(unittest.TestCase):
             def log_message(self,*args):pass
             def do_POST(self):
                 self.rfile.read(int(self.headers['Content-Length']))
-                if before_headers:time.sleep(.24)
+                if before_headers:time.sleep(2.4)
                 self.send_response(200);self.send_header('Content-Type','text/event-stream')
                 self.send_header('Content-Length',str(len(wire)));self.end_headers()
-                if not before_headers:time.sleep(.24)
+                if not before_headers:time.sleep(2.4)
                 try:self.wfile.write(wire)
                 except BrokenPipeError:self.server.client_closed=True
         upstream=self.serve(ThreadingHTTPServer(('127.0.0.1',0),Upstream))
         real=http.client.HTTPConnection
+        # Keep the 240/300 budget ratio with room for shared-runner scheduling.
+        # 保持240/300预算比例，避免共享runner的调度抖动吃掉仅60毫秒的余量。
         class DeadlineSocket:
             def __init__(self,sock):self.sock=sock
             def __getattr__(self,name):return getattr(self.sock,name)
-            def settimeout(self,value):self.sock.settimeout(value/1000 if value>=100 else value)
+            def settimeout(self,value):self.sock.settimeout(value/100 if value>=100 else value)
         class ScaledConnection(real):
             def connect(self):
                 super().connect();self.sock=DeadlineSocket(self.sock)
         with patch('model_monitor.collector.http.client.HTTPConnection',ScaledConnection):
             proxy=self.serve(make_server(self.store,0,'127.0.0.1',upstream.server_port,False))
-            client=real('127.0.0.1',proxy.server_port,timeout=3);self.addCleanup(client.close)
+            client=real('127.0.0.1',proxy.server_port,timeout=10);self.addCleanup(client.close)
             client.request('POST','/backend-api/codex/responses',body=b'{}',headers={'thread-id':'t'})
             response=client.getresponse()
             self.assertEqual(response.status,200)
@@ -94,14 +96,17 @@ class QueueWait(unittest.TestCase):
                     body=b'{"type":"response.completed","response":{"id":"first-r","model":"A"}}'
                     self.connection.sendall(bytes([0x81,len(body)])+body)
                 if server_pongs:
-                    deadline=real_clock()+.42
-                    while real_clock()<deadline:
+                    while not stop.is_set():
                         if real_select([self.connection],[],[],.02)[0]:
-                            data=self.connection.recv(4096)
+                            try:data=self.connection.recv(4096)
+                            except ConnectionResetError:
+                                self.server.client_closed=True;break
                             if not data:break
                             try:self.connection.sendall(b'\x8a\x00')
                             except (BrokenPipeError,ConnectionResetError):break
-                else:time.sleep(.42)
+                # Keep the provider open until the proxy decides, rather than racing its timer.
+                # 让上游等待代理作出超时决定，避免上游定时关闭与被测计时器竞速。
+                else:stop.wait(5)
                 self.close_connection=True
         upstream=self.serve(ThreadingHTTPServer(('127.0.0.1',0),Upstream))
         proxy=self.serve(make_server(self.store,0,'127.0.0.1',upstream.server_port,False))
