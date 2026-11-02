@@ -104,10 +104,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         window.titlebarAppearsTransparent = true
         window.backgroundColor = NSColor.windowBackgroundColor
         guard let iconURL = Bundle.main.url(forResource: "AppIcon", withExtension: "icns"),
-              let icon = NSImage(contentsOf: iconURL) else {
+              NSImage(contentsOf: iconURL) != nil else {
             fatalError("Missing or invalid application icon: AppIcon.icns")
         }
-        NSApp.applicationIconImage = icon
+        // Use the system-rendered bundle icon so Dock and Finder share the same shape.
+        // 使用系统渲染的应用包图标，让 Dock 与 Finder 的轮廓保持一致。
+        let applicationIcon = NSWorkspace.shared.icon(forFile: Bundle.main.bundlePath)
+        // Request a large icon before assigning it to Dock; the default is 32 points.
+        // 交给 Dock 前请求大尺寸图标，避免沿用默认的 32 点尺寸。
+        applicationIcon.size = NSSize(width: 512, height: 512)
+        NSApp.applicationIconImage = applicationIcon
         window.center()
         showLoading("正在连接本机模型核对面板…")
         window.makeKeyAndOrderFront(nil)
