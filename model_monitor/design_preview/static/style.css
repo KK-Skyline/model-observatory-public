@@ -30,3 +30,8 @@ dialog{width:min(660px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overfl
 .diagnostic-section dt,.diagnostic-section dd{border-bottom:1px solid var(--hairline);margin:0;padding:var(--space-3) 0}.diagnostic-section dd{padding-left:var(--space-4);font-variant-numeric:tabular-nums}
 
 .badge.timeout{color:var(--accent-link);border:1px solid var(--hairline);border-radius:var(--r-chip);padding:2px 6px}.badge.timeout::before{background:var(--accent)}.timeout-history{color:var(--accent-link)}
+
+/* Keep the selected character clear at sidebar scale. */
+/* 保持已选人物头像在侧栏尺寸下清晰、完整。 */
+.brand{gap:12px;padding-bottom:24px;min-width:0}.brand>.brand-avatar{width:48px;height:48px;flex:0 0 48px;object-fit:cover;border-radius:14px;opacity:1}.brand>div{min-width:0}.brand span{font-size:10px;letter-spacing:0;white-space:nowrap}
+@media(max-width:680px){.brand{padding-bottom:12px}.brand>.brand-avatar{width:44px;height:44px;flex-basis:44px;border-radius:12px}}

@@ -4,7 +4,7 @@
 <body data-wallpaper="default"><a class="skip" href="#workspace">跳到对话列表</a><img id="imported-background" alt="" hidden>
 <div class="layout">
 <aside class="sidebar" aria-label="主导航">
- <div class="brand"><img src="/icons/activity.svg" alt="" width="25" height="25"><div>模型核对<span>Codex Observatory</span></div></div>
+ <div class="brand"><img class="brand-avatar" src="/icons/brand-avatar.svg" alt="" width="48" height="48"><div>模型核对<span>Model Observatory</span></div></div>
  <p class="side-label">资料库</p>
  <nav class="navigation"><button data-view="all" aria-current="page"><img src="/icons/layers.svg" alt="">全部对话</button><button data-view="pending"><img src="/icons/circle-dashed.svg" alt="">待验证</button><button data-view="mismatch"><img src="/icons/triangle-alert.svg" alt="">不一致</button><button data-view="archived"><img src="/icons/archive.svg" alt="">含归档对话</button></nav>
  <p class="side-label">检查</p><button id="diagnostic-open" class="side-action"><img src="/icons/sliders-horizontal.svg" alt="">读取诊断</button>
@@ -13,7 +13,7 @@
 <main>
  <header class="titlebar"><div class="title-group"><p class="eyebrow">本机观测 <span>/</span> 资料库</p><h1 id="view-title">全部对话</h1></div><div class="header-actions"><span class="preview-label">只读观测</span><button id="diagnostic-toggle" class="diagnostic-toggle" hidden>异常</button><button id="refresh" class="icon-button" title="立即刷新" aria-label="立即刷新"><img src="/icons/refresh-cw.svg" alt=""></button></div></header>
  <div class="content">
- <div class="intro"><p>选择、请求与回报，一目了然。</p><span class="connection-label">每 5 秒自动刷新</span></div>
+ <div class="intro"><p>沿着选择、请求与回包，追查模型证据。</p><span class="connection-label">每 5 秒自动刷新</span></div>
  <div id="monitor-page"><div id="demo-banner" class="warning demo-banner" hidden>合成演示数据 · 仅演示三态，不是实机上游证据。</div>
  <div id="upstream-evidence" class="evidence-note" hidden></div>
  <div class="connection-strip"><span class="connection-marker" aria-hidden="true"></span><div id="connection" role="status">正在连接本机数据…</div></div>
