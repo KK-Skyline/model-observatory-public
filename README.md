@@ -1,16 +1,46 @@
-# 模型核对 · Model Observatory
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="Model Observatory 模型核对：Mac 上的模型证据观测工具，窗口内容为合成示意" width="100%">
+</p>
 
-macOS 本地 Codex 请求模型核对工具。AppKit 原生窗口承载 WebKit 界面，红黄绿按钮可实际操作窗口；Python 标准库后端只输出必要元数据。
+<h1 align="center">模型核对 · Model Observatory</h1>
 
-## 能做什么
+<p align="center">一个个人维护的 macOS 小工具，沿着「选择 → 请求 → 上游」追查模型证据。</p>
 
-- 按对话最近一轮查看“选择 → 请求 → 上游”，追查每次推理与重试。
-- 用同线程/回合的选择快照和稳定 ID 关联独立响应字段，保持模型原名精确比较。
-- 分开显示待验证、不一致、超时和读取异常；取消无响应可默认忽略并恢复查看。
-- 读取分段历史会话的选择来源，保留项目归属候选，排除明确子智能体与内部标题任务。
-- 可选透明无损压缩已完成快照；保留原路径和普通JSON读取。
+<p align="center">
+  <img src="docs/assets/platform.svg" alt="macOS 12+">
+  <img src="docs/assets/python.svg" alt="Python 3.9–3.12">
+  <a href="LICENSE"><img src="docs/assets/license.svg" alt="Apache-2.0"></a>
+  <a href="https://github.com/KK-Skyline/model-observatory-public/actions/workflows/ci.yml"><img src="https://github.com/KK-Skyline/model-observatory-public/actions/workflows/ci.yml/badge.svg?branch=main" alt="macOS CI"></a>
+</p>
 
-**不能承诺全部验证。** 未保存的上游字段、未完成请求、缺选择或关联冲突仍待验证；超过24小时按既有规则只供历史追查。上游model声明不证明内部权重。这是独立项目，不是Apple或OpenAI官方工具。
+<p align="center">
+  <a href="#环境与启动">开始使用</a> ·
+  <a href="docs/AGENT_STORAGE_MAINTENANCE.md">存储维护</a> ·
+  <a href="docs/SOURCE_ADAPTER_GUIDE.md">扩展数据源</a> ·
+  <a href="https://github.com/KK-Skyline/model-observatory-public/issues">反馈问题</a>
+</p>
+
+## 为什么做这个
+
+选了一个模型，也想知道请求实际发给了谁、上游又声明了什么。这个项目把三段来源放在同一个窗口里，方便沿着记录追查，而不是凭当前设置猜历史。
+
+AppKit 原生窗口承载 WebKit 界面，红黄绿按钮可以实际控制窗口；Python 标准库后端只向界面输出必要元数据。记录留在自己的 Mac 上，缺证据时就如实显示待验证。
+
+> **上方为合成界面插画，不是真实用户截图。** A / B 为示例模型名，图中的一致、不一致和待验证不代表实测覆盖率。
+
+## 一眼看清的能力
+
+| | 可以做什么 |
+| --- | --- |
+| **追查来源** | 按对话最近一轮查看选择、发送模型与独立回包，保留推理和重试详情。 |
+| **核对证据** | 同线程/回合选择快照与稳定 ID 关联，模型原名精确比较。 |
+| **解释未知** | 待验证、不一致、超时和读取异常分别呈现；项目归属保留冲突候选。 |
+| **减少噪声** | 取消且无响应的记录可默认忽略、恢复查看；排除明确子智能体和内部标题任务。 |
+| **照顾存储** | 可选无损压缩已完成快照，保留原路径与普通 JSON 读取。 |
+
+<p align="center"><img src="docs/assets/evidence-chain.svg" alt="选择快照、发送请求、独立回包经稳定 ID 关联；缺失或冲突保持待验证" width="100%"></p>
+
+> **证据的边界**：不能承诺全部验证。未保存的上游字段、未完成请求、缺选择或关联冲突仍待验证；超过 24 小时按既有规则只供历史追查。上游 model 声明不证明内部权重。
 
 ## 环境与启动
 
@@ -48,3 +78,7 @@ open "$HOME/Applications/模型核对.app"
 下载后可把 [存储维护提示词](docs/AGENT_STORAGE_MAINTENANCE.md) 交给本机 Agent；现有压缩不会删除历史，也不保证容量永不增长。其他客户端/模型来源的扩展边界与 Agent 提示词见 [来源适配指南](docs/SOURCE_ADAPTER_GUIDE.md)：可以开发适配器，目前并非通用导入工具。
 
 本项目原创源代码采用Apache-2.0，见[LICENSE](LICENSE)。第三方图标保留原有ISC及Feather派生MIT声明，见[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。报告问题前请阅读[SECURITY.md](SECURITY.md)，只提交脱敏元数据。
+
+---
+
+个人项目，欢迎带着脱敏复现来交流。由 [KK-Skyline](https://github.com/KK-Skyline) 维护，Codex 协助开发与审查；详见 [贡献者](CONTRIBUTORS.md)。品牌图像的 [生成提示词](docs/BRAND_IMAGE_PROMPTS.md) 也一并开放。本项目与 Apple、OpenAI 无隶属或官方背书关系。
