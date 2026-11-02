@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/assets/hero.svg" alt="Model Observatory 模型核对：Mac 上的模型证据观测工具，窗口内容为合成示意" width="100%">
+  <img src="docs/assets/mascot.png" alt="Model Observatory 项目形象：银蓝短发、蓝眼睛、托腮思考的无发饰人物" width="180" height="180">
 </p>
 
 <h1 align="center">模型核对 · Model Observatory</h1>
@@ -89,6 +89,10 @@
 选了一个模型，也想知道请求实际发给了谁、上游又声明了什么。这个项目把三段来源放在同一个窗口里，方便沿着记录追查，而不是凭当前设置猜历史。
 
 AppKit 原生窗口承载 WebKit 界面，红黄绿按钮可以实际控制窗口；Python 标准库后端只向界面输出必要元数据。记录留在自己的 Mac 上，缺证据时就如实显示待验证。
+
+<p align="center">
+  <img src="docs/assets/hero.svg" alt="Model Observatory 模型核对：Mac 上的模型证据观测工具，窗口内容为合成示意" width="100%">
+</p>
 
 > **上方为合成界面插画，不是真实用户截图。** A / B 为示例模型名，图中的一致、不一致和待验证不代表实测覆盖率。
 
