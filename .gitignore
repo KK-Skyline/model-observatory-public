@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+auth.json
+*.log
+*.sqlite*
+model_monitor/data/*
+!model_monitor/data/.gitkeep
+model_monitor/design_preview/data/*
+!model_monitor/design_preview/data/.gitkeep
+model_monitor/native/build/
+*.app/
+native-*.png
+native-*.json
