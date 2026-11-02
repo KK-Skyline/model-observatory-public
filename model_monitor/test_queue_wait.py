@@ -62,16 +62,16 @@ class QueueWait(unittest.TestCase):
             def log_message(self,*args):pass
             def do_GET(self):
                 self.connection.sendall(b'HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n\r\n')
-                time.sleep(.24)
+                time.sleep(2.4)
                 try:self.connection.sendall(frame)
                 except BrokenPipeError:self.server.client_closed=True
                 self.close_connection=True
         upstream=self.serve(ThreadingHTTPServer(('127.0.0.1',0),Upstream))
         proxy=self.serve(make_server(self.store,0,'127.0.0.1',upstream.server_port,False))
         real_select=select.select
-        def scaled(read,write,error,timeout):return real_select(read,write,error,timeout/1000 if timeout>=100 else timeout)
+        def scaled(read,write,error,timeout):return real_select(read,write,error,timeout/100 if timeout>=100 else timeout)
         with patch('model_monitor.collector.select.select',scaled):
-            with socket.create_connection(('127.0.0.1',proxy.server_port),timeout=3) as client:
+            with socket.create_connection(('127.0.0.1',proxy.server_port),timeout=10) as client:
                 client.sendall(('GET /backend-api/codex/responses HTTP/1.1\r\nHost: 127.0.0.1:%d\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n\r\n'%proxy.server_port).encode('ascii'))
                 headers=b''
                 while not headers.endswith(b'\r\n\r\n'):headers+=client.recv(1)
@@ -210,13 +210,17 @@ class QueueWait(unittest.TestCase):
 
 
     def test_http_budget_expiry_has_explicit_wait_diagnostic(self):
+        release=threading.Event()
         class Upstream(BaseHTTPRequestHandler):
             def log_message(self,*args):pass
             def do_POST(self):
                 self.rfile.read(int(self.headers['Content-Length']))
-                time.sleep(.36)
+                release.wait(5)
                 self.close_connection=True
         upstream=self.serve(ThreadingHTTPServer(('127.0.0.1',0),Upstream))
+        # Cleanup releases a stalled provider even when the client assertion fails.
+        # 即使客户端断言失败，清理阶段也会释放等待中的模拟上游。
+        self.addCleanup(release.set)
         real=http.client.HTTPConnection
         class ScaledConnection(real):
             def connect(self):
@@ -230,6 +234,7 @@ class QueueWait(unittest.TestCase):
             client=real('127.0.0.1',proxy.server_port,timeout=3);self.addCleanup(client.close)
             client.request('POST','/backend-api/codex/responses',body=b'{}',headers={'thread-id':'t'})
             response=client.getresponse();self.assertEqual(response.status,502);response.read()
+        release.set()
         self.assertEqual(self.store.counts['upstream_wait_timeout'],1)
         event=next(v for v in self.store.recent if v['kind']=='upstream_wait_timeout')
         self.assertEqual(event['wait_limit_seconds'],300)
@@ -237,21 +242,26 @@ class QueueWait(unittest.TestCase):
         self.assertEqual(event['stage'],'upstream_headers')
 
     def test_websocket_active_response_timeout_is_not_idle_housekeeping(self):
+        release=threading.Event()
         payload=b'{"type":"response.created","response":{"id":"waiting-r","model":"A"}}'
         frame=bytes([0x81,len(payload)])+payload
         class Upstream(BaseHTTPRequestHandler):
             def log_message(self,*args):pass
             def do_GET(self):
                 self.connection.sendall(b'HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\n\r\n'+frame)
-                time.sleep(.36);self.close_connection=True
+                release.wait(5);self.close_connection=True
         upstream=self.serve(ThreadingHTTPServer(('127.0.0.1',0),Upstream))
         proxy=self.serve(make_server(self.store,0,'127.0.0.1',upstream.server_port,False))
+        # Hold the upstream open so EOF cannot beat the timeout under scheduler jitter.
+        # 保持上游开启，避免调度延迟使EOF抢在超时判断之前到达。
+        self.addCleanup(release.set)
         real_select=select.select
         def scaled(read,write,error,timeout):return real_select(read,write,error,timeout/1000 if timeout>=100 else timeout)
         with patch('model_monitor.collector.select.select',scaled):
             with socket.create_connection(('127.0.0.1',proxy.server_port),timeout=3) as client:
                 client.sendall(('GET /backend-api/codex/responses HTTP/1.1\r\nHost: 127.0.0.1:%d\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nthread-id: t\r\n\r\n'%proxy.server_port).encode('ascii'))
                 while client.recv(4096):pass
+        release.set()
         self.assertEqual(self.store.counts['upstream_wait_timeout'],1)
         self.assertEqual(self.store.counts['websocket_error'],1)
         self.assertEqual(self.store.counts['websocket_idle_closed'],0)
