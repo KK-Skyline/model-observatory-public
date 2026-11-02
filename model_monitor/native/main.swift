@@ -103,7 +103,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNa
         window.appearance = NSAppearance(named: .aqua)
         window.titlebarAppearsTransparent = true
         window.backgroundColor = NSColor.windowBackgroundColor
-        NSApp.applicationIconImage = NSImage(systemSymbolName: "checkmark.shield", accessibilityDescription: "模型核对")
+        guard let iconURL = Bundle.main.url(forResource: "AppIcon", withExtension: "icns"),
+              let icon = NSImage(contentsOf: iconURL) else {
+            fatalError("Missing or invalid application icon: AppIcon.icns")
+        }
+        NSApp.applicationIconImage = icon
         window.center()
         showLoading("正在连接本机模型核对面板…")
         window.makeKeyAndOrderFront(nil)

@@ -44,3 +44,20 @@ jobs:
           -module-cache-path "$RUNNER_TEMP/swift-module-cache"
           -framework AppKit -framework WebKit -framework UniformTypeIdentifiers
           model_monitor/native/main.swift
+      - name: Build native app and verify icon
+        run: |
+          zsh model_monitor/native/build.command
+          python3 - <<'PYTHON'
+          import hashlib
+          import plistlib
+          from pathlib import Path
+
+          bundle = Path.home() / 'Applications' / '模型核对.app'
+          info = plistlib.loads((bundle / 'Contents/Info.plist').read_bytes())
+          if info.get('CFBundleIconFile') != 'AppIcon.icns':
+              raise SystemExit('Missing application icon declaration.')
+          source = Path('model_monitor/native/AppIcon.icns').read_bytes()
+          installed = (bundle / 'Contents/Resources/AppIcon.icns').read_bytes()
+          if not source.startswith(b'icns') or hashlib.sha256(source).digest() != hashlib.sha256(installed).digest():
+              raise SystemExit('Application icon is invalid or differs from source.')
+          PYTHON
