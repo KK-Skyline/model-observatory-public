@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "context_free": true,
+  "capabilities_commit": "3b12a868d865e007bb098221d0c9129def10929a",
+  "baseline_import_hash": "1efad21d09f5071633f4e43e73f1cc507fb3aa37e55affa7e12bcf25cd221a02",
+  "calibration": {
+    "schema_version": 1,
+    "id": "f8705d2a39ad4012ac978b0cf2e6248c",
+    "state": "completed",
+    "verdict": "证据不足",
+    "declaration": "声明一致",
+    "target": {
+      "endpoint": "http://127.0.0.1:59710/v1",
+      "model": "A",
+      "protocol": "chat",
+      "samples": 40,
+      "timeout": 1,
+      "token_budget": 8192,
+      "conditions": {
+        "language": "zh",
+        "prompt_sha256": "f8b36644e497858790b113aafc049eb2957c1a5019d56635573f8befeac6027d",
+        "temperature": 1.0,
+        "reasoning": "unspecified",
+        "max_output_tokens": 10,
+        "stream": false
+      },
+      "mode": "calibrate",
+      "source": "synthetic:context-free-agent"
+    },
+    "created_at": "2026-11-06T07:16:34.855480+00:00",
+    "updated_at": "2026-11-06T07:16:40.007896+00:00",
+    "valid_samples": 40,
+    "sample_attempts": 40,
+    "requests": 41,
+    "errors": 0,
+    "skipped": 0,
+    "failures": [],
+    "baseline_hashes": [
+      "1efad21d09f5071633f4e43e73f1cc507fb3aa37e55affa7e12bcf25cd221a02",
+      "a81bfd8d6c94df64f60b5956b18b04a74058202c3e6744d5fe8f3a9d80063ba8"
+    ],
+    "usage_tokens": 82,
+    "reserved_tokens": 7968,
+    "notice": "抽样只描述指定接口与条件下的行为，不证明模型真身，也不认证任何一条对话请求。",
+    "context": {
+      "saw_start": true,
+      "saw_mid": true,
+      "saw_end": true
+    },
+    "calibrated_baseline": {
+      "schema_version": 1,
+      "source": "synthetic:context-free-agent",
+      "model": "A",
+      "protocol": "chat",
+      "date": "2026-11-06T07:16:40.007436+00:00",
+      "conditions": {
+        "language": "zh",
+        "prompt_sha256": "f8b36644e497858790b113aafc049eb2957c1a5019d56635573f8befeac6027d",
+        "temperature": 1.0,
+        "reasoning": "unspecified",
+        "max_output_tokens": 10,
+        "stream": false
+      },
+      "hash": "7c01646e38f34d30d8332856feae7d315c4cbc5bfd8c9ee67fed9d0d6cb8946b",
+      "sample_count": 40
+    }
+  },
+  "audit": {
+    "schema_version": 1,
+    "id": "ead558001342479d9469c8abcb7fce22",
+    "state": "completed",
+    "verdict": "未发现异常",
+    "declaration": "声明一致",
+    "target": {
+      "endpoint": "http://127.0.0.1:59710/v1",
+      "model": "A",
+      "protocol": "chat",
+      "samples": 40,
+      "timeout": 1,
+      "token_budget": 8192,
+      "conditions": {
+        "language": "zh",
+        "prompt_sha256": "f8b36644e497858790b113aafc049eb2957c1a5019d56635573f8befeac6027d",
+        "temperature": 1.0,
+        "reasoning": "unspecified",
+        "max_output_tokens": 10,
+        "stream": false
+      }
+    },
+    "created_at": "2026-11-06T07:16:40.085346+00:00",
+    "updated_at": "2026-11-06T07:16:46.574498+00:00",
+    "valid_samples": 40,
+    "sample_attempts": 40,
+    "requests": 41,
+    "errors": 0,
+    "skipped": 0,
+    "failures": [],
+    "baseline_hashes": [
+      "1efad21d09f5071633f4e43e73f1cc507fb3aa37e55affa7e12bcf25cd221a02",
+      "a81bfd8d6c94df64f60b5956b18b04a74058202c3e6744d5fe8f3a9d80063ba8",
+      "7c01646e38f34d30d8332856feae7d315c4cbc5bfd8c9ee67fed9d0d6cb8946b"
+    ],
+    "usage_tokens": 82,
+    "reserved_tokens": 7968,
+    "notice": "抽样只描述指定接口与条件下的行为，不证明模型真身，也不认证任何一条对话请求。",
+    "context": {
+      "saw_start": true,
+      "saw_mid": true,
+      "saw_end": true
+    },
+    "engine_result": {
+      "sample_size": 40,
+      "best_model_name": "A",
+      "best_model_model": "A",
+      "best_posterior": 1.0,
+      "log_margin": 134.49196902454446,
+      "second_model_name": "A-mini",
+      "evidence_level": "很强证据",
+      "top5": [
+        {
+          "name": "A",
+          "model": "A",
+          "posterior": 1.0,
+          "log_predictive": -1.9350113775767568
+        },
+        {
+          "name": "A-mini",
+          "model": "A-mini",
+          "posterior": 3.8983424972974017e-59,
+          "log_predictive": -136.42698040212122
+        }
+      ],
+      "forgery": {
+        "status": "supported",
+        "claimed_model": 1,
+        "best_model": 1,
+        "known_alt_log_bf": -134.49196902454446,
+        "g2": 5.476815859044222,
+        "g2_threshold": 76.90663173613993,
+        "tau_accept": -2.995732273553991,
+        "tau_reject": 1.0986122886681098,
+        "claimed_model_name": "A",
+        "best_model_name": "A",
+        "status_cn": "支持声明"
+      }
+    }
+  },
+  "cancel": {
+    "id": "f32167abb65e44bfa87280e302a85a05",
+    "state": "cancelled"
+  },
+  "history_count": 6
+}

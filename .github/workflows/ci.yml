@@ -21,6 +21,19 @@ jobs:
         uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: '3.12'
+      - name: Prepare pinned optional audit engine
+        shell: bash
+        run: |
+          set -euo pipefail
+          audit_cache="$HOME/Library/Caches/model-observatory-aig"
+          mkdir -p "$audit_cache"
+          git clone --filter=blob:none --no-checkout https://github.com/Tencent/AI-Infra-Guard.git "$audit_cache/upstream"
+          git -C "$audit_cache/upstream" sparse-checkout set services/api_checker
+          git -C "$audit_cache/upstream" fetch --depth=1 origin 3b12a868d865e007bb098221d0c9129def10929a
+          git -C "$audit_cache/upstream" checkout --detach 3b12a868d865e007bb098221d0c9129def10929a
+          python3 -m venv "$audit_cache/venv"
+          "$audit_cache/venv/bin/python" -m pip install -r model_monitor/relay_audit/requirements.lock
+          python3 -m model_monitor.relay_audit diagnose
       - name: Run synthetic tests
         shell: bash
         run: |

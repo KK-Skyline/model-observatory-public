@@ -51,8 +51,8 @@ def demo_snapshot(directory):
     return result
 
 
-def make_preview(scanner, directory, token, port):
-    server = app.make_server(scanner, directory, token, port)
+def make_preview(scanner, directory, token, port, audit=None):
+    server = app.make_server(scanner, directory, token, port, audit=audit)
     parent = server.RequestHandlerClass
     import threading
     demo_lock = threading.Lock()

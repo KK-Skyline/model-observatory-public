@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "transport": "JSON over loopback HTTP; all API endpoints require Authorization: Bearer <in-memory local auth>",
+  "prefix": "/api/audit/v1",
+  "job_submit": {
+    "spec": {
+      "endpoint": "isolated loopback HTTP /v1 or explicit HTTPS /v1; remote execution defaults disabled; operator stdin allow_remote:true required",
+      "model": "exact-model-id",
+      "protocol": "chat | responses | anthropic",
+      "samples": "integer 1..200",
+      "timeout": "wall-clock seconds .05..5, worker terminated at deadline",
+      "token_budget": "integer 1..100000; byte-based conservative reservation and reported usage both bounded",
+      "conditions": "use capabilities.conditions[protocol] exactly; supported temperature 0..1 or null",
+      "mode": "optional audit | calibrate",
+      "source": "calibration provenance established independently; synthetic: description for synthetic samples"
+    },
+    "api_key": "memory-only synthetic endpoint key"
+  },
+  "baseline_import": {
+    "schema_version": 1,
+    "source": "independently established provenance; string <=200",
+    "model": "original exact ID",
+    "protocol": "chat | responses | anthropic",
+    "date": "ISO 8601",
+    "conditions": "same schema as job",
+    "samples": "40..10000 integers 1..355; probe statistics, never chat text"
+  },
+  "success": {
+    "schema_version": 1,
+    "data": "operation result"
+  },
+  "error": {
+    "schema_version": 1,
+    "error": "invalid_input | not_found | audit_backend_unavailable"
+  },
+  "job_states": [
+    "queued",
+    "running",
+    "cancelling",
+    "completed",
+    "failed",
+    "cancelled"
+  ],
+  "sampling_verdicts": [
+    "未发现异常",
+    "发现偏离",
+    "证据不足"
+  ],
+  "declaration_verdicts": [
+    "声明一致",
+    "声明冲突",
+    "声明缺失"
+  ],
+  "binding": [
+    "id",
+    "target.endpoint",
+    "target.model",
+    "target.protocol",
+    "target.conditions",
+    "baseline_hashes",
+    "created_at",
+    "updated_at"
+  ],
+  "limitations": "Default remote execution disabled, only synthetic execution verified. HTTPS supported after explicit operator credential/cost authorization. At least 40 valid samples and two compatible reference models required. Complete JSON only; no SSE authentication or per-request identity certification."
+}

@@ -1,0 +1,4 @@
+{
+  "services/api_checker/algorithms/common.py": "c65d1b64a3ff24d2847644ec5781fc023e0e7fea773bc95cdf0e94ab4ef148a9",
+  "services/api_checker/algorithms/bayes_score.py": "8df0579e59abd53e8f6ef2ac57f60a26a19ee8ec97f2c8629fb9f4bf51156597"
+}

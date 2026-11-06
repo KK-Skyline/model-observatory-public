@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "id": "05c7350b1dee4355b81ca65ada4c3d7d",
+  "state": "completed",
+  "verdict": "未发现异常",
+  "declaration": "声明一致",
+  "target": {
+    "conditions": {
+      "language": "zh",
+      "max_output_tokens": 10,
+      "prompt_sha256": "f8b36644e497858790b113aafc049eb2957c1a5019d56635573f8befeac6027d",
+      "reasoning": "unspecified",
+      "stream": false,
+      "temperature": 1.0
+    },
+    "endpoint": "http://127.0.0.1:58263/v1",
+    "model": "A",
+    "protocol": "chat",
+    "samples": 40,
+    "timeout": 1,
+    "token_budget": 8192
+  },
+  "created_at": "2026-11-06T07:15:18.018669+00:00",
+  "updated_at": "2026-11-06T07:15:20.919229+00:00",
+  "valid_samples": 40,
+  "sample_attempts": 40,
+  "requests": 41,
+  "errors": 0,
+  "skipped": 0,
+  "failures": [],
+  "baseline_hashes": [
+    "bc386dbfbf883d86c942474838b75beda030dce2621febd6cf7699d469e7265a",
+    "20f83adfef8d443c5beff683363544bc7ccaa2c35943c7cf5b15b995c4eb7839"
+  ],
+  "usage_tokens": 82,
+  "reserved_tokens": 7968,
+  "notice": "抽样只描述指定接口与条件下的行为，不证明模型真身，也不认证任何一条对话请求。",
+  "context": {
+    "saw_start": true,
+    "saw_mid": true,
+    "saw_end": true
+  },
+  "engine_result": {
+    "sample_size": 40,
+    "best_model_name": "A",
+    "best_model_model": "A",
+    "best_posterior": 1.0,
+    "log_margin": 131.14957507609807,
+    "second_model_name": "A-mini",
+    "evidence_level": "很强证据",
+    "top5": [
+      {
+        "name": "A",
+        "model": "A",
+        "posterior": 1.0,
+        "log_predictive": -0.18598521363628606
+      },
+      {
+        "name": "A-mini",
+        "model": "A-mini",
+        "posterior": 1.1027148940269286e-57,
+        "log_predictive": -131.33556028973436
+      }
+    ],
+    "forgery": {
+      "status": "supported",
+      "claimed_model": 0,
+      "best_model": 0,
+      "known_alt_log_bf": -131.14957507609807,
+      "g2": 0.38972023989524895,
+      "g2_threshold": 17.53722276831563,
+      "tau_accept": -2.995732273553991,
+      "tau_reject": 1.0986122886681098,
+      "claimed_model_name": "A",
+      "best_model_name": "A",
+      "status_cn": "支持声明"
+    }
+  }
+}

@@ -531,7 +531,7 @@ class Scanner:
                 'collector_status':collector_status,'connection_visibility':connection_visibility,'last_success':self.last_success,'scanned_at':now,'stale_after_hours':24,'demo':False}
 
 
-def make_server(scanner, directory, token, port):
+def make_server(scanner, directory, token, port, audit=None):
     settings_lock = threading.Lock()
     class Handler(BaseHTTPRequestHandler):
         def log_message(self, *args):
@@ -555,6 +555,8 @@ def make_server(scanner, directory, token, port):
             return True
 
         def do_GET(self):
+            from model_monitor.relay_audit.http import dispatch
+            if dispatch(self,audit):return
             path=urlsplit(self.path).path
             if not self.allowed(auth=path.startswith('/api/')):
                 return
@@ -583,6 +585,8 @@ def make_server(scanner, directory, token, port):
                 self.respond(200,(BASE/'static'/filename).read_bytes(),mime)
 
         def do_POST(self):
+            from model_monitor.relay_audit.http import dispatch
+            if dispatch(self,audit):return
             if not self.allowed():return
             if self.path=='/api/wallpaper':
                 try:

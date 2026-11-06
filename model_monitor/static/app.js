@@ -10,6 +10,15 @@ async function api(path,body){
  const data=await response.json(); if(!response.ok)throw new Error(data.error||'HTTP '+response.status); return data;
 }
 function text(tag,value,cls){const e=document.createElement(tag);e.textContent=value??'未知';if(cls)e.className=cls;return e;}
+function declarationBadge(value,record,key){
+ const e=badge(readError?'待验证':value);
+ if(readError){e.textContent='待验证';return e;}
+ const reason=record?.[key==='request_status'?'request_reason':'upstream_reason'];
+ const field=key==='request_status'?'request_model':'upstream_model';
+ const missing=key==='request_status'?reason==='请求 model 缺失':['响应缺少独立 model 字段','已检查真实回包：该回包未声明模型'].includes(reason);
+ e.textContent=({一致:'声明一致',不一致:'声明冲突'}[value]||(value==='待验证'&&missing&&!record?.[field]?'声明缺失':'待验证'));
+ return e;
+}
 function badge(value){return text('span',value,'badge '+({'一致':'good','不一致':'bad','超时':'timeout'}[value]||'unknown'));}
 function date(ms){return ms?new Date(ms).toLocaleString('zh-CN',{hour12:false}):'无记录';}
 function status(t){return readError?'待验证':t.records[0]?.[$('layer').value]||'待验证';}
@@ -35,7 +44,7 @@ function render(){
   if(t.ignore_cancelled_without_response)name.append(text('small','已取消 · 无完成或部分回包'));
   else if(t.connection&&['failed','reconnecting'].includes(t.connection.state))name.append(text('small',(t.connection.state==='reconnecting'?'正在重连':'连接失败')+` · ${t.connection.reconnect_count} 次建连重试 · ${t.connection.failed_attempts} 次失败调用`));
   for(const key of ['selected_model','request_model','upstream_model'])tr.append(text('td',r?.[key]));
-  for(const key of ['request_status','upstream_status']){const td=document.createElement('td');td.append(badge(r?.[key]||'待验证'));td.title=(r?.[key==='request_status'?'request_reason':'upstream_reason']||'没有请求记录')+(key==='upstream_status'&&r?.evidence_diagnosis?.labels.length?'；'+r.evidence_diagnosis.labels.join('；'):'');tr.append(td);}
+  for(const key of ['request_status','upstream_status']){const td=document.createElement('td');td.append(declarationBadge(r?.[key]||'待验证',r,key));td.title=(r?.[key==='request_status'?'request_reason':'upstream_reason']||'没有请求记录')+(key==='upstream_status'&&r?.evidence_diagnosis?.labels.length?'；'+r.evidence_diagnosis.labels.join('；'):'');tr.append(td);}
   tr.append(text('td',date(r?.updated_at)));$('rows').append(tr);
  }
  if(!visible.length){const td=text('td','没有符合条件的对话');td.colSpan=7;const tr=document.createElement('tr');tr.append(td);$('rows').append(tr);}
@@ -51,7 +60,7 @@ function renderDetail(){
  const opened=new Set([...document.querySelectorAll('#history details[open]')].map(d=>d.dataset.id));
  $('detail-title').textContent=t.name+' / '+t.project+'（'+(t.project_source||'合成演示')+'）';$('history').replaceChildren();
  if(!t.records.length)$('history').append(text('p','没有原生请求记录；该轮选择和上游均待验证。'));
- for(const r of t.records){const d=document.createElement('details');d.className='history-entry';d.dataset.id=r.id;d.open=opened.has(r.id);const s=text('summary',date(r.updated_at)+' · '+(r.selected_model||'未知')+' → '+(r.request_model||'未知')+' → '+(r.upstream_model||'未知')+'　');s.append(badge(readError?'待验证':r.upstream_status));if(r.execution_state==='timeout')s.append(badge('超时'));d.append(s,text('pre',JSON.stringify(r,null,2)));$('history').append(d);}
+ for(const r of t.records){const d=document.createElement('details');d.className='history-entry';d.dataset.id=r.id;d.open=opened.has(r.id);const s=text('summary',date(r.updated_at)+' · '+(r.selected_model||'未知')+' → '+(r.request_model||'未知')+' → '+(r.upstream_model||'未知')+'　');s.append(declarationBadge(readError?'待验证':r.upstream_status,r,'upstream_status'));if(r.execution_state==='timeout')s.append(badge('超时'));d.append(s,text('pre',JSON.stringify(r,null,2)));$('history').append(d);}
 }
 async function refresh(){
  if(refreshing)return;refreshing=true;
